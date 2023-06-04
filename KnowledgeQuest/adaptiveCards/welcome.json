@@ -16,8 +16,8 @@
   "actions": [
     {
       "type": "Action.Execute",
-      "title": "Start self-assessment",
-      "verb": "selfassessment",
+      "title": "Select self-assessment",
+      "verb": "selectselfassessment",
       "fallback": "Action.Submit"
     },
     {

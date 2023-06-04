@@ -7,6 +7,7 @@ import {
 } from "botbuilder";
 import rawWelcomeCard from "./adaptiveCards/welcome.json";
 import rawLearnCard from "./adaptiveCards/learn.json";
+import rawSelectSelfassessmentCard from "./adaptiveCards/selectselfassessment.json";
 import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
 import { Configuration, OpenAIApi } from "openai";
 import config from "./config";
@@ -23,11 +24,6 @@ export class TeamsBot extends TeamsActivityHandler {
     super();
 
     this.likeCountObj = { likeCount: 0 };
-
-    const configuration = new Configuration({
-      apiKey: config.openAIKey,
-    });
-    const openai = new OpenAIApi(configuration);
 
     this.onMessage(async (context, next) => {
       console.log("Running with Message Activity.");
@@ -96,9 +92,30 @@ export class TeamsBot extends TeamsActivityHandler {
     }
 
     switch (invokeValue.action.verb) {
-      case "selfassessment":
+      case "selectselfassessment":
+        // The verb "selectselfassessment" is sent from the Adaptive Card defined in adaptiveCards/selectselfassessment.json  
+        const card = AdaptiveCards.declareWithoutData(rawSelectSelfassessmentCard).render();
+        await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
+
         break;
+
       case "mystats":
+        break;
+
+      case "startselfassessment":
+        // The verb "startselfassessment" is sent from the Adaptive Card defined in adaptiveCards/welcome.json
+
+        // // Call OpenAI to get the assessment questions
+        // const configuration = new Configuration({
+        //   apiKey: config.openAIKey,
+        // });
+
+        // const openai = new OpenAIApi(configuration);
+
+        // const completion = await openai.createCompletion({
+        //     model: "text-davinci-003",
+        //     prompt: messageText,
+        // });
         break;
     }
   }
