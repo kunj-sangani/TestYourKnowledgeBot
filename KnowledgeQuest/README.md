@@ -10,6 +10,20 @@ This is a simple hello world application with Bot capabilities.
 - An M365 account. If you do not have M365 account, apply one from [M365 developer program](https://developer.microsoft.com/en-us/microsoft-365/dev-program)
 - [Teams Toolkit Visual Studio Code Extension](https://aka.ms/teams-toolkit) version 5.0.0 and higher or [TeamsFx CLI](https://aka.ms/teamsfx-cli)
 
+## Customizations
+
+1. Install OpenAI npm package.
+
+  ```
+  npm install openai
+  ```
+
+2. Set the OpenAI API key/
+
+  ```
+  $env:OPENAI_KEY='<OPENAI-KEY>'
+  ```
+
 ## Debug
 
 - From Visual Studio Code: Start debugging the project by hitting the `F5` key in Visual Studio Code.

@@ -8,6 +8,8 @@ import {
 import rawWelcomeCard from "./adaptiveCards/welcome.json";
 import rawLearnCard from "./adaptiveCards/learn.json";
 import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
+import { Configuration, OpenAIApi } from "openai";
+import config from "./config";
 
 export interface DataInterface {
   likeCount: number;
@@ -21,6 +23,11 @@ export class TeamsBot extends TeamsActivityHandler {
     super();
 
     this.likeCountObj = { likeCount: 0 };
+
+    const configuration = new Configuration({
+      apiKey: config.openAIKey,
+    });
+    const openai = new OpenAIApi(configuration);
 
     this.onMessage(async (context, next) => {
       console.log("Running with Message Activity.");
@@ -86,6 +93,13 @@ export class TeamsBot extends TeamsActivityHandler {
         attachments: [CardFactory.adaptiveCard(card)],
       });
       return { statusCode: 200, type: undefined, value: undefined };
+    }
+
+    switch (invokeValue.action.verb) {
+      case "selfassessment":
+        break;
+      case "mystats":
+        break;
     }
   }
 }
