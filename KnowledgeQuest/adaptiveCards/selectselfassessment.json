@@ -13,11 +13,13 @@
         "wrap": true
       },
 	  {
+        "id": "assessmenttopic",
 		"type": "Input.Text",
-		"label": "Assessment topic",
+		"label": "Assessment topic",        
 		"isRequired": true
 	  },
 	  {
+        "id": "numofquestions",
 		"type": "Input.Number",
 		"label": "Number of questions",
 		"value": 5,

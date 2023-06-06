@@ -11,6 +11,7 @@ import rawSelectSelfassessmentCard from "./adaptiveCards/selectselfassessment.js
 import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
 import { Configuration, OpenAIApi } from "openai";
 import config from "./config";
+import { StartSelfAssessment } from "./adaptiveCards/models/StartSelfAssessment";
 
 export interface DataInterface {
   likeCount: number;
@@ -104,18 +105,29 @@ export class TeamsBot extends TeamsActivityHandler {
 
       case "startselfassessment":
         // The verb "startselfassessment" is sent from the Adaptive Card defined in adaptiveCards/welcome.json
+        // Call OpenAI to get the assessment questions
+        const configuration = new Configuration({
+          apiKey: config.openAIKey,
+        });
 
-        // // Call OpenAI to get the assessment questions
-        // const configuration = new Configuration({
-        //   apiKey: config.openAIKey,
-        // });
+        const openai = new OpenAIApi(configuration);
 
-        // const openai = new OpenAIApi(configuration);
+        const completion = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `Generate ${invokeValue.action.data.numofquestions} multichoice questions with correct answer option and reference links on ${invokeValue.action.data.assessmenttopic}`,
+        });
 
-        // const completion = await openai.createCompletion({
-        //     model: "text-davinci-003",
-        //     prompt: messageText,
-        // });
+        var a = completion.data;
+
+        // NEXT
+        // Render your adaptive card for reply message
+      //   const cardData: CardData = {
+      //     title: "Hello from OpenAI",
+      //     body: completion.data.choices[0].text,
+      // };
+
+      // const cardJson = AdaptiveCards.declare(helloWorldCard).render(cardData);
+      // return MessageFactory.attachment(CardFactory.adaptiveCard(cardJson));
         break;
     }
   }
