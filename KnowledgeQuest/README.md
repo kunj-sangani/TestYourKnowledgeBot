@@ -15,7 +15,7 @@ This is a simple hello world application with Bot capabilities.
 1. Install OpenAI npm package.
 
   ```
-  npm install openai
+  npm install @azure/openai
   ```
 
 2. Set the OpenAI API key/

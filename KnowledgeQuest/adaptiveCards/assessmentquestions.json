@@ -1,0 +1,28 @@
+{
+    "type": "AdaptiveCard",
+    "body": [
+        {
+            "type": "Container",
+            "$data": "${questions}",
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "${question}"
+                },
+                {
+                    "type": "Input.ChoiceSet",
+                    "choices": [
+                        {
+                            "$data": "${options}",
+                            "title": "${_}",
+                            "value": "${_}"
+                        }
+                    ],
+                    "placeholder": "Placeholder text"
+                }
+            ]
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.4"
+}

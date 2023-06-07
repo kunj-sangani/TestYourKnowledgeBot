@@ -1,7 +1,8 @@
 const config = {
   botId: process.env.BOT_ID,
   botPassword: process.env.BOT_PASSWORD,
-  openAIKey: process.env.OPENAI_KEY
+  endpoint: 'https://XXXX.openai.azure.com/',
+  azureApiKey: 'XXXX'
 };
 
 export default config;
