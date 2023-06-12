@@ -9,12 +9,14 @@ import rawWelcomeCard from "./adaptiveCards/welcome.json";
 import rawLearnCard from "./adaptiveCards/learn.json";
 import rawSelectSelfassessmentCard from "./adaptiveCards/selectselfassessment.json";
 import rawAssessmentquestionsCard from "./adaptiveCards/assessmentquestions.json";
+import rawInformationPanelCard from "./adaptiveCards/informationpanel.json";
 import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
 import { OpenAIClient, AzureKeyCredential } from "@azure/openai";
 // import { Configuration, OpenAIApi } from "openai";
 import config from "./config";
 import { StartSelfAssessment } from "./adaptiveCards/models/StartSelfAssessment";
-import { AssessmentQuestions } from "./adaptiveCards/models/AssessmentQuestions";
+import { Question, OptionSet } from "./adaptiveCards/models/AssessmentQuestions";
+import { InformationPanel } from "./adaptiveCards/models/InformationPanel";
 
 export interface DataInterface {
   likeCount: number;
@@ -23,11 +25,17 @@ export interface DataInterface {
 export class TeamsBot extends TeamsActivityHandler {
   // record the likeCount
   likeCountObj: { likeCount: number };
+  assessmentQuestionsObj: { assessmentQuestions: Question[] };
+  assessmentQuestionIndexObj: { assessmentQuestionIndex: number };
+  correctAnswersObj: { correctAnswers: number };
 
   constructor() {
     super();
 
     this.likeCountObj = { likeCount: 0 };
+    this.assessmentQuestionsObj = { assessmentQuestions: null };
+    this.assessmentQuestionIndexObj = { assessmentQuestionIndex: 0 };
+    this.correctAnswersObj = { correctAnswers: 0 };
 
     this.onMessage(async (context, next) => {
       console.log("Running with Message Activity.");
@@ -108,103 +116,153 @@ export class TeamsBot extends TeamsActivityHandler {
 
       case "startselfassessment":
         // The verb "startselfassessment" is sent from the Adaptive Card defined in adaptiveCards/welcome.json
-        // Call Azure OpenAI to get the assessment questions
-        // const prompt = [`Generate ${invokeValue.action.data.numofquestions} multichoice questions with correct answer option and reference links on ${invokeValue.action.data.assessmenttopic} in JSON format`];
+        await context.sendActivity(`Please wait while we generate your self assessment...`);
 
-        // // You will need to set these environment variables or edit the following values
-        // const endpoint = config.endpoint;
-        // const azureApiKey = config.azureApiKey;
+        // Call Azure OpenAI to get the assessment questions
+        const prompt = [`Generate ${invokeValue.action.data.numofquestions} multichoice questions with correct answer option and reference links on ${invokeValue.action.data.assessmenttopic} in JSON format with elements as question, options, answer, and referenceLink`];
+
+        // You will need to set these environment variables or edit the following values
+        const endpoint = config.endpoint;
+        const azureApiKey = config.azureApiKey;
 
         // const client = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));
         // const deploymentId = "text-davinci-003";
 
         // const result = await client.getCompletions(deploymentId, prompt, { maxTokens: 4000 });
+        // var choiceText = "";
         // for (const choice of result.choices) {
-        //   console.log(choice.text);
+        //   choiceText = choice.text;
         // }
 
-        var choiceText = `{
-          questions: [
-            {
-              question: "What are the main components of the Azure platform?",
-              options: [
-                "Storage Accounts, Virtual Machines and Data Lakes",
-                "Storage Services, HDInsight and Worker Roles",
-                "App Services, Data Factory and Redis Cache",
-                "Virtual Networks, Web Apps and Service Bus"
+        var choiceText = `
+        [
+          {
+              "question": "Which of the following is an Open-Source Platform offered by Microsoft Azure?",
+              "options": [
+                  "A) Amazon EC2",
+                  "B) Red Hat OpenShift",
+                  "C) Google Cloud Platform",
+                  "D) Microsoft Azure Cloud Services"
               ],
-              answer: 3,
-              referenceLink: "https://docs.microsoft.com/en-us/azure/architecture/overview/"
-            },
-            {
-              question: "Which of the following is not a component of the Azure platform?",
-              options: [
-                "Azure Funtions",
-                "Azure Networking",
-                "Azure Virtual Machine",
-                "Azure Database"
+              "answer": "B) Red Hat OpenShift",
+              "referenceLink": "https://azure.microsoft.com/en-us/features/openshift/"
+          },
+          {
+              "question": "What is the purpose of Azure Data Lake?",
+              "options": [
+                  "A) To store data in the cloud",
+                  "B) To process data in the cloud",
+                  "C) To query data in the cloud",
+                  "D) To replicate data in the cloud"
               ],
-              answer: 1,
-              referenceLink: "https://docs.microsoft.com/en-us/azure/architecture/overview/"
-            },
-            {
-              question: "What does the Azure Virtual Network service provide?",
-              options: [
-                "A set of virtualization tools",
-                "A virtual private cloud",
-                "A web hosting platform",
-                "A messaging system"
+              "answer": "B) To process data in the cloud",
+              "referenceLink": "https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-what-is-it"
+          },
+          {
+              "question": "What is the name of the open source container platform offered by Microsoft Azure?",
+              "options": [
+                  "A) Azure Kubernetes Service",
+                  "B) Azure Container Service",
+                  "C) Azure Service Fabric",
+                  "D) Azure Container Instances"
               ],
-              answer: 1,
-              referenceLink: "https://docs.microsoft.com/en-us/azure/virtual-network/"
-            },
-            {
-              question: "Which of the following services is part of the Azure Database offering?",
-              options: [
-                "Azure SQL Database",
-                "Cosmos DB",
-                "Azure Storage",
-                "Azure App Services"
+              "answer": "A) Azure Kubernetes Service",
+              "referenceLink": "https://azure.microsoft.com/en-us/services/kubernetes-service/"
+          },
+          {
+              "question": "Which Azure service is primarily used to detect anomalies in a dataset?",
+              "options": [
+                  "A) Azure Machine Learning Service",
+                  "B) Azure Cognitive Services",
+                  "C) Azure Data Factory",
+                  "D) Azure Event Hub"
               ],
-              answer: 0,
-              referenceLink: "https://docs.microsoft.com/en-us/azure/azure-database/"
-            },
-            {
-              question: "What is the primary benefit of using the Azure Service Bus?",
-              options: [
-                "Providing a fully managed storage solution",
-                "Enabling the creation of backend services",
-                "Allowing for secure communication between distributed systems",
-                "Creating a private cloud platform"
+              "answer": "A) Azure Machine Learning Service",
+              "referenceLink": "https://azure.microsoft.com/en-us/services/machine-learning-service/"
+          },
+          {
+              "question": "Which of the following metrics provide an indication of how much load your system is currently experiencing?",
+              "options": [
+                  "A) Bandwidth",
+                  "B) Throughput",
+                  "C) Latency",
+                  "D) Utilization"
               ],
-              answer: 2,
-              referenceLink: "https://docs.microsoft.com/en-us/azure/service-bus/"
-            }
-          ]
-        }`;
+              "answer": "D) Utilization",
+              "referenceLink": "https://docs.microsoft.com/en-us/azure/azure-monitor/fundamentals/metrics-concepts"
+          }
+      ]`;
 
         // Fix missing quotation marks on keys in JSON
         choiceText = choiceText.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:([^\/])/g, '"$2":$4');
 
-        var jsonObject: AssessmentQuestions = JSON.parse(choiceText);
+        this.assessmentQuestionsObj.assessmentQuestions = JSON.parse(choiceText);
+        this.assessmentQuestionIndexObj.assessmentQuestionIndex = 1;
 
-        const assessmentCard = AdaptiveCards.declare<AssessmentQuestions>(rawAssessmentquestionsCard).render(jsonObject);
-        await context.updateActivity({
-          type: "message",
-          id: context.activity.replyToId,
-          attachments: [CardFactory.adaptiveCard(assessmentCard)],
+        this.assessmentQuestionsObj.assessmentQuestions.forEach(question => {
+          const choiceSetOptions: OptionSet[] = question.options.map((option, index) => ({
+            title: option,
+            value: option
+          }));
+
+          question.optionSet = choiceSetOptions;
         });
-        return { statusCode: 200, type: undefined, value: undefined };
 
-        // NEXT
-        // Render your adaptive card for reply message
-        //   const cardData: CardData = {
-        //     title: "Hello from OpenAI",
-        //     body: completion.data.choices[0].text,
-        // };
+        const assessmentCard = AdaptiveCards.declare<Question>(rawAssessmentquestionsCard).render(this.assessmentQuestionsObj.assessmentQuestions[0]);
+        await context.sendActivity({ attachments: [CardFactory.adaptiveCard(assessmentCard)] });
 
-        // const cardJson = AdaptiveCards.declare(helloWorldCard).render(cardData);
-        // return MessageFactory.attachment(CardFactory.adaptiveCard(cardJson));
+        break;
+
+      case 'nextquestion':
+        if (this.assessmentQuestionIndexObj.assessmentQuestionIndex < this.assessmentQuestionsObj.assessmentQuestions.length) {
+          var userAnswer = invokeValue.action.data.answerChoice;
+          var correctAnswer = this.assessmentQuestionsObj.assessmentQuestions[this.assessmentQuestionIndexObj.assessmentQuestionIndex].answer;
+
+          if (userAnswer === correctAnswer) {
+            this.correctAnswersObj.correctAnswers += 1;
+          }
+
+          this.assessmentQuestionIndexObj.assessmentQuestionIndex += 1;
+
+          if (this.assessmentQuestionIndexObj.assessmentQuestionIndex < this.assessmentQuestionsObj.assessmentQuestions.length) {
+            const assessmentQCard = AdaptiveCards.declare<Question>(rawAssessmentquestionsCard).render(this.assessmentQuestionsObj.assessmentQuestions[this.assessmentQuestionIndexObj.assessmentQuestionIndex]);
+
+            await context.updateActivity({
+              type: "message",
+              id: context.activity.replyToId,
+              attachments: [CardFactory.adaptiveCard(assessmentQCard)],
+            });
+            return { statusCode: 200, type: undefined, value: undefined };
+          }
+          else {
+            const cardData: InformationPanel = {
+              title: "Knowledge Quest",
+              body: `Your score: ${this.correctAnswersObj.correctAnswers} / ${this.assessmentQuestionsObj.assessmentQuestions.length}. Thank you for choosing Knowledge Quest to challenge and expand your knowledge! We appreciate your dedication to learning and hope Knowledge Quest continues to inspire and entertain you. Knowledge is power! Type 'welcome' to start exploring again.`,
+            };
+
+            const informationPanelCard = AdaptiveCards.declare<InformationPanel>(rawInformationPanelCard).render(cardData);
+            await context.sendActivity({ attachments: [CardFactory.adaptiveCard(informationPanelCard)] });
+
+            this.assessmentQuestionsObj.assessmentQuestions = null;
+            this.assessmentQuestionIndexObj.assessmentQuestionIndex = 0;
+            this.correctAnswersObj.correctAnswers = 0;
+          }
+        }
+        break;
+
+      case 'endassessment':
+        const cardData: InformationPanel = {
+          title: "Knowledge Quest",
+          body: `Your score: ${this.correctAnswersObj.correctAnswers} / ${this.assessmentQuestionsObj.assessmentQuestions.length}. Thank you for choosing Knowledge Quest to challenge and expand your knowledge! We appreciate your dedication to learning and hope Knowledge Quest continues to inspire and entertain you. Knowledge is power! Type 'welcome' to start exploring again.`,
+        };
+
+        const informationPanelCard = AdaptiveCards.declare<InformationPanel>(rawInformationPanelCard).render(cardData);
+        await context.sendActivity({ attachments: [CardFactory.adaptiveCard(informationPanelCard)] });
+
+        this.assessmentQuestionsObj.assessmentQuestions = null;
+        this.assessmentQuestionIndexObj.assessmentQuestionIndex = 0;
+        this.correctAnswersObj.correctAnswers = 0;
+
         break;
     }
   }

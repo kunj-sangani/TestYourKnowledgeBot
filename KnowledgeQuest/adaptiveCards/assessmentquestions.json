@@ -3,7 +3,6 @@
     "body": [
         {
             "type": "Container",
-            "$data": "${questions}",
             "items": [
                 {
                     "type": "TextBlock",
@@ -11,16 +10,32 @@
                 },
                 {
                     "type": "Input.ChoiceSet",
+                    "id": "answerChoice",
+                    "style": "expanded",
+                    "isMultiSelect": false,
                     "choices": [
                         {
-                            "$data": "${options}",
-                            "title": "${_}",
-                            "value": "${_}"
+                            "$data": "${optionSet}",
+                            "title": "${title}",
+                            "value": "${value}"
                         }
-                    ],
-                    "placeholder": "Placeholder text"
+                    ]
                 }
             ]
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.Execute",
+            "title": "Next Question >",
+            "verb": "nextquestion",
+            "fallback": "Action.Submit"
+        },
+        {
+            "type": "Action.Execute",
+            "title": "End Assessment",
+            "verb": "endassessment",
+            "fallback": "Action.Submit"
         }
     ],
     "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
