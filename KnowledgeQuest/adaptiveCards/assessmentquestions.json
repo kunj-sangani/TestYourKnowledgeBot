@@ -6,13 +6,20 @@
             "items": [
                 {
                     "type": "TextBlock",
-                    "text": "${question}"
+                    "text": "Question ${currentindex}/${totalQuestionsCount}",
+                    "wrap": true,
+                    "size": "large",
+                    "weight": "Bolder"
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "${question}",
+                    "wrap": true
                 },
                 {
                     "type": "Input.ChoiceSet",
                     "id": "answerChoice",
                     "style": "expanded",
-                    "isMultiSelect": false,
                     "choices": [
                         {
                             "$data": "${optionSet}",
@@ -39,5 +46,5 @@
         }
     ],
     "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-    "version": "1.4"
+    "version": "1.5"
 }

@@ -4,6 +4,8 @@ export interface Question {
     optionSet: OptionSet[];
     answer: string;
     referenceLink: string;
+    currentIndex:number;
+    totalQuestionsCount:number;
 }
 
 export interface OptionSet {

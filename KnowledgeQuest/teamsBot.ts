@@ -113,8 +113,8 @@ export class TeamsBot extends TeamsActivityHandler {
         break;
 
       case "mystats":
-        const card = AdaptiveCards.declareWithoutData(rawStatsCard).render();
-        await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
+        const card1 = AdaptiveCards.declareWithoutData(rawStatsCard).render();
+        await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card1)] });
         break;
 
       case "startselfassessment":
@@ -200,15 +200,17 @@ export class TeamsBot extends TeamsActivityHandler {
         choiceText = choiceText.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:([^\/])/g, '"$2":$4');
 
         this.assessmentQuestionsObj.assessmentQuestions = JSON.parse(choiceText);
-        this.assessmentQuestionIndexObj.assessmentQuestionIndex = 1;
+        this.assessmentQuestionIndexObj.assessmentQuestionIndex = 0;
 
-        this.assessmentQuestionsObj.assessmentQuestions.forEach(question => {
+        this.assessmentQuestionsObj.assessmentQuestions.forEach((question, itemindex) => {
           const choiceSetOptions: OptionSet[] = question.options.map((option, index) => ({
             title: option,
             value: option
           }));
 
           question.optionSet = choiceSetOptions;
+          question.currentIndex = itemindex+1;
+          question.totalQuestionsCount = this.assessmentQuestionsObj.assessmentQuestions.length;
         });
 
         const assessmentCard = AdaptiveCards.declare<Question>(rawAssessmentquestionsCard).render(this.assessmentQuestionsObj.assessmentQuestions[0]);
