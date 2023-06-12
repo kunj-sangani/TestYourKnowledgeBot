@@ -10,6 +10,7 @@ import rawLearnCard from "./adaptiveCards/learn.json";
 import rawSelectSelfassessmentCard from "./adaptiveCards/selectselfassessment.json";
 import rawAssessmentquestionsCard from "./adaptiveCards/assessmentquestions.json";
 import rawInformationPanelCard from "./adaptiveCards/informationpanel.json";
+import rawStatsCard from "./adaptiveCards/stats.json";
 import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
 import { OpenAIClient, AzureKeyCredential } from "@azure/openai";
 // import { Configuration, OpenAIApi } from "openai";
@@ -112,6 +113,8 @@ export class TeamsBot extends TeamsActivityHandler {
         break;
 
       case "mystats":
+        const card = AdaptiveCards.declareWithoutData(rawStatsCard).render();
+        await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
         break;
 
       case "startselfassessment":
