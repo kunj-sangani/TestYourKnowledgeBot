@@ -1,8 +1,23 @@
-# How to use this Bot HelloWorld app
+# Knowledge Quest Teams Bot
 
-A bot, chatbot, or conversational bot is an app that responds to simple commands sent in chat and replies in meaningful ways. Examples of bots in everyday use include: bots that notify about build failures, bots that provide information about the weather or bus schedules, or provide travel information. A bot interaction can be a quick question and answer, or it can be a complex conversation. Being a cloud application, a bot can provide valuable and secure access to cloud services and corporate resources.
+[![Hacktogether badge](https://img.shields.io/badge/HackTogether-Entry-6264A7?style=for-the-badge&logoColor=white&logo=MicrosoftTeams)](https://github.com/microsoft/hack-together-teams)
 
-This is a simple hello world application with Bot capabilities.
+## Summary
+
+The Knowledge Quest Teams Bot is an interactive Chat Bot application designed to allow users to test their knowledge on specific topics using the power of OpenAI. The app provides an engaging and educational experience where users can challenge themselves and expand their knowledge in various areas.
+
+## Key Features
+
+-- Topic Selection: Users can choose from a wide range of topics available within the app. These topics can include subjects like technology(Azure, SharePoint, Teams, .NET, AWS etc.) it can also generate Questions on science, history, geography, literature, mathematics, and more.
+
+-- Dynamic Question Generation: The bot leverages the capabilities of OpenAI to generate relevant and challenging questions based on the selected topic. The questions are designed to test the user's understanding and depth of knowledge in the chosen subject.
+
+-- Interactive Quiz Experience: Users engage in an interactive quiz session where they receive questions one at a time from the bot. They can provide their answers, and the bot evaluates them to determine correctness at the end.
+
+-- User-Friendly Interface: The app provides a user-friendly and intuitive interface via Adaptive Cards, ensuring a seamless and enjoyable user experience. The interface is designed to be visually appealing and easy to navigate, allowing users to focus on the quiz content.
+
+-- My Stats: The app also offers statistics regarding the quizzes you have taken in the past, including your scores. This feature provides valuable insights into your knowledge and learning progress based on your previous quiz performances. It's an excellent tool to assess how well you're doing and track your growth over time.
+
 
 ## Prerequisites
 

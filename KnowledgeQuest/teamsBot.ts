@@ -207,7 +207,7 @@ export class TeamsBot extends TeamsActivityHandler {
             title: option,
             value: option
           }));
-
+          question.selectedTopic = invokeValue.action.data.assessmenttopic
           question.optionSet = choiceSetOptions;
           question.currentIndex = itemindex+1;
           question.totalQuestionsCount = this.assessmentQuestionsObj.assessmentQuestions.length;

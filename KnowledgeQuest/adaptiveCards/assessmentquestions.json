@@ -2,6 +2,17 @@
     "type": "AdaptiveCard",
     "body": [
         {
+            "type": "TextBlock",
+            "text": "Topic: ${selectedTopic}",
+            "wrap": true,
+            "weight": "Bolder",
+            "color": "Accent",
+            "style": "heading",
+            "fontType": "Default",
+            "size": "Large",
+            "isSubtle": true
+        },
+        {
             "type": "Container",
             "items": [
                 {
@@ -29,6 +40,11 @@
                     ]
                 }
             ]
+        },
+        {
+            "type": "TextBlock",
+            "text": "Reference [link](${referenceLink})",
+            "wrap": true
         }
     ],
     "actions": [

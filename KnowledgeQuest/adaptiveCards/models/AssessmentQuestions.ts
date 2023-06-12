@@ -6,6 +6,7 @@ export interface Question {
     referenceLink: string;
     currentIndex:number;
     totalQuestionsCount:number;
+    selectedTopic:any;
 }
 
 export interface OptionSet {
