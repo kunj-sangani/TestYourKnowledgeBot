@@ -25,6 +25,13 @@ The Knowledge Quest Teams Bot is an interactive Chat Bot application designed to
 - An M365 account. If you do not have M365 account, apply one from [M365 developer program](https://developer.microsoft.com/en-us/microsoft-365/dev-program)
 - [Teams Toolkit Visual Studio Code Extension](https://aka.ms/teams-toolkit) version 5.0.0 and higher or [TeamsFx CLI](https://aka.ms/teamsfx-cli)
 
+## The Hack Team
+
+- [Kunj Sangani](https://github.com/kunj-sangani)
+- [Siddharth Vaghasia](https://github.com/siddharth-vaghasia)
+- [Smita Nachan](https://github.com/SmitaNachan)
+- [Nanddeep Nachan](https://github.com/nanddeepn)
+
 ## Customizations
 
 1. Install OpenAI npm package.
