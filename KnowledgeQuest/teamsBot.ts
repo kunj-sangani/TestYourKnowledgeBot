@@ -109,7 +109,7 @@ export class TeamsBot extends TeamsActivityHandler {
         // The verb "selectselfassessment" is sent from the Adaptive Card defined in adaptiveCards/selectselfassessment.json  
         const card = AdaptiveCards.declareWithoutData(rawSelectSelfassessmentCard).render();
         await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
-
+        return { statusCode: 200, type: undefined, value: undefined };
         break;
 
       case "mystats":
@@ -215,7 +215,7 @@ export class TeamsBot extends TeamsActivityHandler {
 
         const assessmentCard = AdaptiveCards.declare<Question>(rawAssessmentquestionsCard).render(this.assessmentQuestionsObj.assessmentQuestions[0]);
         await context.sendActivity({ attachments: [CardFactory.adaptiveCard(assessmentCard)] });
-
+        return { statusCode: 200, type: undefined, value: undefined };
         break;
 
       case 'nextquestion':
@@ -246,11 +246,17 @@ export class TeamsBot extends TeamsActivityHandler {
             };
 
             const informationPanelCard = AdaptiveCards.declare<InformationPanel>(rawInformationPanelCard).render(cardData);
-            await context.sendActivity({ attachments: [CardFactory.adaptiveCard(informationPanelCard)] });
+            await context.updateActivity({
+              type: "message",
+              id: context.activity.replyToId,
+              attachments: [CardFactory.adaptiveCard(informationPanelCard)],
+            });
+            //await context.updateActivity({ attachments: [CardFactory.adaptiveCard(informationPanelCard)] });
 
             this.assessmentQuestionsObj.assessmentQuestions = null;
             this.assessmentQuestionIndexObj.assessmentQuestionIndex = 0;
             this.correctAnswersObj.correctAnswers = 0;
+            return { statusCode: 200, type: undefined, value: undefined };
           }
         }
         break;
