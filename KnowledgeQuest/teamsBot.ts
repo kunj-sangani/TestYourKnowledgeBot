@@ -13,7 +13,6 @@ import rawInformationPanelCard from "./adaptiveCards/informationpanel.json";
 import rawStatsCard from "./adaptiveCards/stats.json";
 import { AdaptiveCards } from "@microsoft/adaptivecards-tools";
 import { OpenAIClient, AzureKeyCredential } from "@azure/openai";
-// import { Configuration, OpenAIApi } from "openai";
 import config from "./config";
 import { StartSelfAssessment } from "./adaptiveCards/models/StartSelfAssessment";
 import { Question, OptionSet } from "./adaptiveCards/models/AssessmentQuestions";
@@ -61,12 +60,6 @@ export class TeamsBot extends TeamsActivityHandler {
           await context.sendActivity({ attachments: [CardFactory.adaptiveCard(card)] });
           break;
         }
-        /**
-         * case "yourCommand": {
-         *   await context.sendActivity(`Add your response here!`);
-         *   break;
-         * }
-         */
       }
 
       // By calling next() you ensure that the next BotHandler is run.
@@ -128,73 +121,14 @@ export class TeamsBot extends TeamsActivityHandler {
         const endpoint = config.endpoint;
         const azureApiKey = config.azureApiKey;
 
-        // const client = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));
-        // const deploymentId = "text-davinci-003";
+        const client = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));
+        const deploymentId = "text-davinci-003";
 
-        // const result = await client.getCompletions(deploymentId, prompt, { maxTokens: 4000 });
-        // var choiceText = "";
-        // for (const choice of result.choices) {
-        //   choiceText = choice.text;
-        // }
-
-        var choiceText = `
-        [
-          {
-              "question": "Which of the following is an Open-Source Platform offered by Microsoft Azure?",
-              "options": [
-                  "A) Amazon EC2",
-                  "B) Red Hat OpenShift",
-                  "C) Google Cloud Platform",
-                  "D) Microsoft Azure Cloud Services"
-              ],
-              "answer": "B) Red Hat OpenShift",
-              "referenceLink": "https://azure.microsoft.com/en-us/features/openshift/"
-          },
-          {
-              "question": "What is the purpose of Azure Data Lake?",
-              "options": [
-                  "A) To store data in the cloud",
-                  "B) To process data in the cloud",
-                  "C) To query data in the cloud",
-                  "D) To replicate data in the cloud"
-              ],
-              "answer": "B) To process data in the cloud",
-              "referenceLink": "https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-what-is-it"
-          },
-          {
-              "question": "What is the name of the open source container platform offered by Microsoft Azure?",
-              "options": [
-                  "A) Azure Kubernetes Service",
-                  "B) Azure Container Service",
-                  "C) Azure Service Fabric",
-                  "D) Azure Container Instances"
-              ],
-              "answer": "A) Azure Kubernetes Service",
-              "referenceLink": "https://azure.microsoft.com/en-us/services/kubernetes-service/"
-          },
-          {
-              "question": "Which Azure service is primarily used to detect anomalies in a dataset?",
-              "options": [
-                  "A) Azure Machine Learning Service",
-                  "B) Azure Cognitive Services",
-                  "C) Azure Data Factory",
-                  "D) Azure Event Hub"
-              ],
-              "answer": "A) Azure Machine Learning Service",
-              "referenceLink": "https://azure.microsoft.com/en-us/services/machine-learning-service/"
-          },
-          {
-              "question": "Which of the following metrics provide an indication of how much load your system is currently experiencing?",
-              "options": [
-                  "A) Bandwidth",
-                  "B) Throughput",
-                  "C) Latency",
-                  "D) Utilization"
-              ],
-              "answer": "D) Utilization",
-              "referenceLink": "https://docs.microsoft.com/en-us/azure/azure-monitor/fundamentals/metrics-concepts"
-          }
-      ]`;
+        const result = await client.getCompletions(deploymentId, prompt, { maxTokens: 4000 });
+        var choiceText = "";
+        for (const choice of result.choices) {
+          choiceText = choice.text;
+        }
 
         // Fix missing quotation marks on keys in JSON
         choiceText = choiceText.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:([^\/])/g, '"$2":$4');
