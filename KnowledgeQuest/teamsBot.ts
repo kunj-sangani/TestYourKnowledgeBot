@@ -185,7 +185,6 @@ export class TeamsBot extends TeamsActivityHandler {
               id: context.activity.replyToId,
               attachments: [CardFactory.adaptiveCard(informationPanelCard)],
             });
-            //await context.updateActivity({ attachments: [CardFactory.adaptiveCard(informationPanelCard)] });
 
             this.assessmentQuestionsObj.assessmentQuestions = null;
             this.assessmentQuestionIndexObj.assessmentQuestionIndex = 0;
